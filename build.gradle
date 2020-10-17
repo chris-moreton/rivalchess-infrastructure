@@ -1,0 +1,152 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.3.RELEASE")
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
+        classpath('org.owasp:dependency-check-gradle:6.0.1')
+    }
+}
+
+def cucumberVersion = '4.7.1'
+def junitVersion = '5.5.0'
+
+group = 'arcotc'    // This needs to change to `bubbl` when dockerhub is set up for Bubbl
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.palantir.docker'
+apply plugin: 'org.owasp.dependencycheck'
+apply plugin: 'pmd'
+apply plugin: 'jacoco'
+apply plugin: 'checkstyle'
+
+bootJar {
+    archiveBaseName = 'mobile-gateway-api'
+    version = '0.0.1'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestRuntime.extendsFrom testRuntime
+
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+pmd {
+    toolVersion = "6.5.0"
+    ignoreFailures = true
+    sourceSets = [sourceSets.main, sourceSets.test]
+    reportsDir = file("$project.buildDir/reports/pmd")
+    ruleSetFiles = files("config/pmd/ruleset.xml")
+}
+
+jacoco {
+    toolVersion = "0.8.4"
+    reportsDir = file("$project.buildDir/reports/jacoco")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("$project.buildDir/reports/jacocoHtml")
+    }
+}
+
+checkstyle {
+    maxWarnings = 0
+    toolVersion = '8.24'
+    // need to set configDir to rootDir otherwise submodule will use submodule/config/checkstyle
+    configDir = new File(rootDir, 'config/checkstyle')
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration/java')
+        }
+        resources.srcDir file('src/integration/resources')
+    }
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:2.3.3.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-actuator:2.3.3.RELEASE")
+
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+
+    compile group: 'org.apache.maven.plugins', name: 'maven-pmd-plugin', version: '3.13.0'
+
+    //LOMBOK Dependencies
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testCompile 'org.projectlombok:lombok'
+    testImplementation 'org.projectlombok:lombok'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
+    compile group: 'org.apache.activemq', name: 'activemq-broker', version: '5.15.11'
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+    testCompile("org.junit.jupiter:junit-jupiter-params:5.4.2")
+
+//    BDD
+    integrationTestImplementation "io.cucumber:cucumber-java:${cucumberVersion}"
+    integrationTestImplementation "io.cucumber:cucumber-junit:${cucumberVersion}"
+    integrationTestImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    integrationTestImplementation "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    integrationTestImplementation "org.junit.vintage:junit-vintage-engine:${junitVersion}"
+
+
+    // Metrics
+    compile group: 'io.micrometer', name: 'micrometer-core'
+    compile group: 'io.micrometer', name: 'micrometer-registry-prometheus'
+}
+
+task unpack(type: Copy) {
+    dependsOn bootJar
+    from(zipTree(tasks.bootJar.outputs.files.singleFile))
+    into("build/dependency")
+}
+
+docker {
+    name "${project.group}/${bootJar.baseName}"
+    copySpec.from(tasks.unpack.outputs).into("dependency")
+    buildArgs(['DEPENDENCY': "dependency"])
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['src/test/resources/features', '--glue', 'uk.co.thinkinnovate.steps', '--plugin', 'pretty']
+        }
+    }
+}
