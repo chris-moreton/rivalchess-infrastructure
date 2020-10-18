@@ -1,6 +1,0 @@
-aws_access_key = "AKIA443INMMSCXJPY7DJ"
-aws_secret_key = "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"
-aws_key_path = ""
-aws_key_name = ""
-active_mq_user = "rivalchess"
-active_mq_password = "Bublasdlk981"
