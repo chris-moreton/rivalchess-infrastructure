@@ -7,6 +7,7 @@ resource "aws_db_instance" "default" {
   password          = var.db_password
   allocated_storage = 20
   publicly_accessible = true
+  vpc_security_group_ids = [aws_security_group.rivalchess_mysql_sg.id]
 }
 
 provider "mysql" {
@@ -19,6 +20,19 @@ resource "mysql_database" "chess_matches" {
   name = "chess_matches"
 }
 
-resource "mysql_database" "chess_matches" {
-  name = "event_log"
+resource "aws_security_group" "rivalchess_mysql_sg" {
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
