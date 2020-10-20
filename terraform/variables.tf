@@ -6,9 +6,8 @@ variable "aws_vpc_region" {
     default = "eu-west-2"
 }
 
-variable "active_mq_user" {
-}
-
-variable "active_mq_password" {
-}
+variable "active_mq_user" {}
+variable "active_mq_password" {}
+variable "db_user" {}
+variable "db_password" {}
 
