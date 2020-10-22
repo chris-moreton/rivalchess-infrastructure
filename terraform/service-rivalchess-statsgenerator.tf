@@ -1,8 +1,8 @@
-module rivalchess_player_service {
+module rivalchess_statsgenerator_service {
 
   source = "./modules/service"
 
-  service_name = "player"
+  service_name = "statsgenerator"
 
   aws_access_key = var.aws_access_key
   aws_secret_key = var.aws_secret_key

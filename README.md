@@ -1,4 +1,4 @@
-# Bubbl Deploy #
+# RivalChess Vie Terraform Infrastructure
 
 ## Prerequisites
 
@@ -58,10 +58,7 @@ From the terraform directory:
 
     ./run.sh apply
     
-#### Push the Docker images to ECR
 
-    cd ../docker
-    ./build-tag-push.sh
 
     
 

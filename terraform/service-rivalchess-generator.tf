@@ -1,8 +1,10 @@
-module rivalchess_player_service {
+module rivalchess_generator_service {
 
-  source = "./modules/service"
+  source = "./modules/web_service"
 
-  service_name = "player"
+  vpc_id = aws_default_vpc.default.id
+
+  service_name = "generator"
 
   aws_access_key = var.aws_access_key
   aws_secret_key = var.aws_secret_key

@@ -11,3 +11,12 @@ variable "active_mq_password" {}
 variable "db_user" {}
 variable "db_password" {}
 
+variable "dashboard_bucket_name" { default = "rivalchess-dashboard-web" }
+
+variable "rivalchess_generator_port" {
+    default = 8080
+}
+
+variable "rivalchess_dashboard_port" {
+    default = 8080
+}
