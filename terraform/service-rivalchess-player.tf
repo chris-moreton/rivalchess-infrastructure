@@ -34,8 +34,6 @@ module rivalchess_player_service {
 module rivalchess_player_autoscaling {
   source        = "./modules/autoscale"
   cluster_name  = aws_ecs_cluster.rivalchess_ecs_cluster.name
-  environment   = "prod"
-  name          = "autoscale-player"
   queue_name    = "MatchRequests"
   service_name  = "rivalchess-player-service"
 }

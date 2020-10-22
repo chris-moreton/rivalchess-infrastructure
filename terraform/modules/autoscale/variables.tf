@@ -1,6 +1,6 @@
 variable "adjustment_type_down" {
   description = "Autoscaling policy down adjustment type (ChangeInCapacity, PercentChangeInCapacity)"
-  default     = "ExactCapacity"
+  default     = "ChangeInCapacity"
 }
 
 variable "adjustment_type_up" {
@@ -152,5 +152,5 @@ variable "scale_up_min_adjustment_magnitude" {
 
 variable "sns_stuck_alarm_arn" {
   description = "SNS autoscaling stuck at max alarm arn"
-  default     = ""
+  default     = 100
 }
