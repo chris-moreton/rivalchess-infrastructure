@@ -68,7 +68,7 @@ variable "low_threshold" {
 
 variable "max_capacity" {
   description = "Maximum number of tasks to scale to"
-  default     = "5"
+  default     = "200"
 }
 
 variable "min_capacity" {

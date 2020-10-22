@@ -163,33 +163,6 @@ resource "aws_appautoscaling_policy" "scale_down" {
   }
 }
 
-##
-## Cloudwatch Alarms
-##
-resource "aws_cloudwatch_metric_alarm" "service_max_stuck" {
-  count = var.stuck_eval_minutes > 0 ? 1 : 0
-
-  alarm_name                = "rivalchess-max-stuck"
-  alarm_description         = "rivalchess is possibly stuck at max"
-  comparison_operator       = "GreaterThanOrEqualToThreshold"
-  evaluation_periods        = var.stuck_eval_minutes
-  metric_name               = "CPUUtilization"
-  namespace                 = "AWS/ECS"
-  period                    = "60"
-  statistic                 = "SampleCount"
-  threshold                 = floor(var.max_capacity * 0.9)
-  actions_enabled           = "true"
-  alarm_actions             = [var.sns_stuck_alarm_arn]
-  ok_actions                = [var.sns_stuck_alarm_arn]
-  insufficient_data_actions = []
-  treat_missing_data        = "ignore"
-
-  dimensions = {
-    ClusterName = var.cluster_name
-    ServiceName = var.service_name
-  }
-}
-
 resource "aws_cloudwatch_metric_alarm" "service_queue_high" {
   count = var.high_threshold > 0 ? 1 : 0
 

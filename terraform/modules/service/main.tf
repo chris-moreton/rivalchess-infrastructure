@@ -70,8 +70,8 @@ resource "aws_ecs_task_definition" "rivalchess_task" {
           "awslogs-stream-prefix": "ecs"
         }
       },
-      "memory": 512,
-      "cpu": 256
+      "memory": ${var.container_memory},
+      "cpu": ${var.container_cpu}
     }
   ]
   DEFINITION
