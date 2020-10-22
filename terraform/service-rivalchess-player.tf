@@ -30,3 +30,12 @@ module rivalchess_player_service {
   log_group = aws_cloudwatch_log_group.rivalchess.id
   cluster_id = aws_ecs_cluster.rivalchess_ecs_cluster.id
 }
+
+module rivalchess_player_autoscaling {
+  source        = "./modules/autoscale"
+  cluster_name  = aws_ecs_cluster.rivalchess_ecs_cluster.name
+  environment   = "prod"
+  name          = "autoscale-player"
+  queue_name    = "MatchRequests"
+  service_name  = "rivalchess-player-service"
+}
