@@ -26,6 +26,10 @@ variable "container_port" {
   default = 8080
 }
 
+variable "rivalchess_vie_statsapi_endpoint" {
+  default = ""
+}
+
 variable "public_subnet_ids" {}
 variable "container_memory" {}
 variable "container_cpu" {}

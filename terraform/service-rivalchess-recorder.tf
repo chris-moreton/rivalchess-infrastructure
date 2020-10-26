@@ -7,6 +7,8 @@ module rivalchess_recorder_service {
   aws_access_key = var.aws_access_key
   aws_secret_key = var.aws_secret_key
 
+  rivalchess_vie_statsapi_endpoint = module.rivalchess_statsapi_service.web_service_url
+
   aws_vpc_region = var.aws_vpc_region
 
   active_mq_url = aws_mq_broker.rivalchess_activemq.instances.0.endpoints.0

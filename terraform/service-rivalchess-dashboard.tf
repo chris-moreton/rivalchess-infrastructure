@@ -6,6 +6,8 @@ module rivalchess_dashboard_service {
 
   service_name = "dashboard"
 
+  rivalchess_vie_statsapi_endpoint = module.rivalchess_statsapi_service.web_service_url
+
   aws_access_key = var.aws_access_key
   aws_secret_key = var.aws_secret_key
 
@@ -31,4 +33,6 @@ module rivalchess_dashboard_service {
   task_execution_role = aws_iam_role.rivalchessEcsTaskExecutionRole.arn
   log_group = aws_cloudwatch_log_group.rivalchess.id
   cluster_id = aws_ecs_cluster.rivalchess_ecs_cluster.id
+
+  depends_on = [module.rivalchess_statsapi_service]
 }

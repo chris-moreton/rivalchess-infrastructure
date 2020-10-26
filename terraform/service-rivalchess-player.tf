@@ -19,7 +19,7 @@ module rivalchess_player_service {
 
   redis_url = aws_elasticache_cluster.rivalchess_redis_cache.cache_nodes.0.address
 
-  desired_task_count = 1
+  desired_task_count = 3
 
   container_port = 8080
 
@@ -31,9 +31,9 @@ module rivalchess_player_service {
   cluster_id = aws_ecs_cluster.rivalchess_ecs_cluster.id
 }
 
-module rivalchess_player_autoscaling {
-  source        = "./modules/autoscale"
-  cluster_name  = aws_ecs_cluster.rivalchess_ecs_cluster.name
-  queue_name    = "MatchRequests"
-  service_name  = "rivalchess-player-service"
-}
+//module rivalchess_player_autoscaling {
+//  source        = "./modules/autoscale"
+//  cluster_name  = aws_ecs_cluster.rivalchess_ecs_cluster.name
+//  queue_name    = "MatchRequests"
+//  service_name  = "rivalchess-player-service"
+//}

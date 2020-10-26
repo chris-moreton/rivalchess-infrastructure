@@ -67,8 +67,16 @@ resource "aws_ecs_task_definition" "rivalchess_task" {
               "value": "${var.db_password}"
         },
         {
-              "name": "REDIS_URL",
+              "name": "REDIS_HOST",
               "value": "${var.redis_url}"
+        },
+        {
+              "name": "REDIS_PORT",
+              "value": "6379"
+        },
+        {
+              "name": "STATS_API_ENDPOINT",
+              "value": "${var.rivalchess_vie_statsapi_endpoint}"
         }
       ],
       "portMappings": [

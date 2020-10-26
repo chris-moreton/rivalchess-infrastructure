@@ -28,7 +28,7 @@ variable "high_period_secs" {
 
 variable "high_threshold" {
   description = "The value against which the high statistic is compared"
-  default     = "1000"
+  default     = "100"
 }
 
 variable "high_big_threshold" {
@@ -63,7 +63,7 @@ variable "low_period_secs" {
 
 variable "low_threshold" {
   description = "The value against which the low statistic is compared"
-  default     = "100"
+  default     = "25"
 }
 
 variable "max_capacity" {
