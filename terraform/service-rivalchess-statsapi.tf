@@ -26,7 +26,7 @@ module rivalchess_statsapi_service {
   container_port = 8080
 
   public_subnet_ids = [aws_default_subnet.default_2a.id, aws_default_subnet.default_2b.id]
-  container_memory = 512
+  container_memory = 1024
   container_cpu = 256
   task_execution_role = aws_iam_role.rivalchessEcsTaskExecutionRole.arn
   log_group = aws_cloudwatch_log_group.rivalchess.id
