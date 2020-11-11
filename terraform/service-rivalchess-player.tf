@@ -19,7 +19,7 @@ module rivalchess_player_service {
 
   redis_url = aws_elasticache_cluster.rivalchess_redis_cache.cache_nodes.0.address
 
-  desired_task_count = 50
+  desired_task_count = var.player_count
 
   container_port = 8080
 

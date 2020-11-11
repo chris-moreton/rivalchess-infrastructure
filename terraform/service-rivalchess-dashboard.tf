@@ -23,7 +23,7 @@ module rivalchess_dashboard_service {
 
   redis_url = aws_elasticache_cluster.rivalchess_redis_cache.cache_nodes.0.address
 
-  desired_task_count = 1
+  desired_task_count = var.dashboard_count
 
   container_port = 8080
 
